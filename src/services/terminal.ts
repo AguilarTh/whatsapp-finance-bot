@@ -1,5 +1,6 @@
 import * as readline from "readline";
 import { processarMensagemComIA } from "./ai";
+import { processarESalvarTransacao } from "./transaction";
 
 export function startTerminalSimulation() {
   const rl = readline.createInterface({
@@ -21,14 +22,13 @@ export function startTerminalSimulation() {
       }
 
       if (input) {
-        console.log(`\n🤖 Processando via Gemini...`);
-
-        // Envia a string livre para o Gemini e recebe um Objeto Estruturado de volta
+        console.log(`\n🤖 Extraindo dados via Gemini...`);
         const dadosEstruturados = await processarMensagemComIA(input);
 
         if (dadosEstruturados) {
-          console.log("✅ Dados Extraídos com Sucesso:");
           console.dir(dadosEstruturados, { depth: null, colors: true });
+          console.log(`\n💾 Salvando no banco de dados...`);
+          await processarESalvarTransacao(dadosEstruturados);
         }
       }
 
